@@ -6,7 +6,10 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+import requests
+from scrapy.utils.httpobj import urlparse_cached
+from scrapy import Request
+import base64
 
 class CrawlSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -54,12 +57,28 @@ class CrawlSpiderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
-
+username='13603217363'
+password='7enc036o'
 
 class CrawlDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
+    def __init__(self):
+        self.proxies_list=[]
+    def get_proxy(self,request):
+        parsed=urlparse_cached(request)
+        scheme=parsed.scheme
+        if not self.proxies_list:
+            self.proxies_list=self.get_proxies()
+        ip=self.proxies_list[0]
+        self.proxies_list=self.proxies_list[1:]+self.proxies_list[:1]
+        return '%s://%s'% (scheme,ip)
+    def get_proxies(self):
+        result=requests.get('http://dps.kdlapi.com/api/getdps/?orderid=907190620668280&num=5&pt=1&format=json&sep=1')
+        data=result.json().get('data')
+        url_list=data['proxy_list']
+        return url_list
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -78,6 +97,10 @@ class CrawlDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+        auth = "Basic %s" % (base64.b64encode(('%s:%s' % (username, password)).encode('utf-8'))).decode('utf-8')
+        request.headers['Proxy-Authorization'] = auth
+        proxy_url = self.get_proxy(request)
+        request.meta['proxy'] = proxy_url
         return None
 
     def process_response(self, request, response, spider):
