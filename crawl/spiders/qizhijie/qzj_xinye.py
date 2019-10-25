@@ -2,7 +2,7 @@ import scrapy,re
 from scrapy import Spider
 from scrapy import Selector,Request
 from urllib.parse import urljoin
-from crawl.items.xinye_item import Xy_Item
+from crawl.crawl.items.xinye_item import Xy_Item
 
 
 class Qizj_xinye(scrapy.Spider):
@@ -16,7 +16,7 @@ class Qizj_xinye(scrapy.Spider):
             item['urls']=i.css('a::attr(href)').extract_first()
             item['url'] = urljoin(response.url,item['urls'])
             print(item['url'])
-            yield Request(url=item['url'],callback=self.parse_text)
+            # yield Request(url=item['url'],callback=self.parse_text)
 
     def parse_text(self,response):
         item=Xy_Item()
@@ -29,16 +29,16 @@ class Qizj_xinye(scrapy.Spider):
         item['img']=sel.css('div.conBox p img::attr(src)').extract()
         if item['txt']==None:
             item['span']=''.join(sel.css('div.conBox p span:text').extract())
-            yield item
-            print(item['span'])
+            # yield item
+            # print(item['span'])
         if item['img']==None:
             item['img_url']=sel.css('div.conBox p psan::attr(src)').extract()
-            print(item['img_url'])
-            yield item
+            # print(item['img_url'])
+            # yield item
         # print(item['title'])
         # print(item['time'])
         # print(item['laiyuan'])
         # print(item['author'])
         # print(item['txt'])
         # print(item['img'])
-        yield item
+        # yield item
