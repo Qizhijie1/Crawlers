@@ -14,6 +14,18 @@ BOT_NAME = 'crawl'
 SPIDER_MODULES = ['crawl.spiders']
 NEWSPIDER_MODULE = 'crawl.spiders'
 
+#region scrapy-redis
+# SCHEDULER='scrapy_redis.scheduler.Scheduler'
+# DUPEFILTER_CLASS='scrapy_redis.dupefilter.RFPDupeFilter'
+# SCHEDULER_PERSIST=True
+# ITEM_PIPELINES = {
+#    'scrapy_redis.pipelines.RedisPipeline': 100,
+# }
+# REDIS_HOST='127.0.0.1'
+# REDIS_PORT=6379
+#endregion
+
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'crawl (+http://www.yourdomain.com)'
