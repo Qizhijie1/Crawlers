@@ -2,7 +2,7 @@ import scrapy,re
 from scrapy import Spider
 from scrapy import Selector,Request
 from urllib.parse import urljoin
-from crawl.crawl.items.xinye_item import Xy_Item
+from crawl.items.xinye_item import Xy_Item
 
 
 class Qizj_xinye(scrapy.Spider):
